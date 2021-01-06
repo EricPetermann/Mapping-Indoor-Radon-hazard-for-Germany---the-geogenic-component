@@ -1,6 +1,3 @@
-setwd("W:/UR_intern/UR2/SW1-1/Mitarbeiter/Petermann/Paper/Mapping Indoor Rn - geogenic hazard and actual risk/GitHub/Data/")
-#setwd("GitHub/")
-
 #load predictor data
 GRHI<-raster("GRHI.tif")
 #load indoor Rn data
@@ -28,7 +25,7 @@ glm300.GRHI <- glm(Exc_300~GRHI,data=IRC,
 library(ggplot2)
 library(mgcv)
 
-## 100 Bq/m³
+## 100 Bq/mÂ³
 #calculate probabilities of logistic regression model
 fitted.response100<-predict(glm100.GRHI,type="response")
 #fit ordinary GAM for smoothing
@@ -45,7 +42,7 @@ GLM.calib100<-ggplot(pdata.cal,aes(cal,jitter(as.numeric(Exc_100)-1,0.1)))+
   geom_smooth(col="grey60",formula=y~s(x,bs="ts",m=3))
 
 
-## 300 Bq/m³
+## 300 Bq/mÂ³
 fitted.response300<-predict(glm300.GRHI,type="response")
 #fit ordinary GAM for smoothing
 cal.mod.GRHI_300<-gam(IRC$Exc_300~s(fitted.response300,bs="ts",m=3),family="binomial") #s() defines smooths in GAM formula; bs="ts" thin plate regression splines defines smoothing basis
@@ -77,16 +74,16 @@ mySummary <- function (data,glm) {
 }
 
 # define ranges for bins
-bin.thresh300 <- c(0,0.02,0.04,0.06,0.08,0.1,0.15,1) # 300 Bq/m³ exceedance
-bin.thresh100 <- c(0,0.1,0.15,0.2,0.25,0.3,0.45,1)   # 100 Bq/m³ exceedance
+bin.thresh300 <- c(0,0.02,0.04,0.06,0.08,0.1,0.15,1) # 300 Bq/mÂ³ exceedance
+bin.thresh100 <- c(0,0.1,0.15,0.2,0.25,0.3,0.45,1)   # 100 Bq/mÂ³ exceedance
 
-# exceedance 100 Bq/m³ ->f(GRHI)
+# exceedance 100 Bq/mÂ³ ->f(GRHI)
 emp.prob_GRHI100.cal <- matrix(ncol=7,nrow=100)                   # empirical exceedance frequency
 mean.prob_GRHI100.cal <- matrix(ncol=7,nrow=100)                  # predicted probability
 in.bin_GRHI100.cal <- matrix(ncol=7,nrow=100)                     # observations in bin
 in.bin.exceed_GRHI100.cal <- matrix(ncol=7,nrow=100)
 metrics_GRHI100.cal <- matrix(ncol=2,nrow=100)
-#exceedance 100 Bq/m³; predictor GRHI
+#exceedance 100 Bq/mÂ³; predictor GRHI
 for (i in 1:100){                                 # i=100 20*5fold cross-validation
   # fit glm model to training data
   glm <- glm(Exc_100~GRHI,data=IRC[sb100[[i]],],            
@@ -109,22 +106,19 @@ for (i in 1:100){                                 # i=100 20*5fold cross-validat
     indices <- which(test.data$predicted >= bin.thresh100[j] & 
                        test.data$predicted < bin.thresh100[j+1])               # find indices of test observations in bin
     in.bin_GRHI100.cal[i,j] <- length(test.data$predicted[indices])                # number of test observations in bin
-    in.bin.exceed_GRHI100.cal[i,j] <- length(which(test.data$actual[indices]==1))  # number of test observations in bin exceeding 100/100 Bq/m³
+    in.bin.exceed_GRHI100.cal[i,j] <- length(which(test.data$actual[indices]==1))  # number of test observations in bin exceeding 100/100 Bq/mÂ³
     mean.prob_GRHI100.cal[i,j] <- mean(test.data$predicted[indices])               # mean predicted probability in bin
     emp.prob_GRHI100.cal[i,j] <- in.bin.exceed_GRHI100.cal[i,j]/in.bin_GRHI100.cal[i,j]    # mean predicted probability in bin
   }
 }
-setwd("W:/UR_intern/UR2/SW1-1/Mitarbeiter/Petermann/Paper/Mapping Indoor Rn - geogenic hazard and actual risk/GitHub/Data/glm model evaluation test performance/")
-# write.csv(mean.prob_GRHI100.cal,"Prob Exc100 predicted in classes_calibrated.csv")
-# write.csv(emp.prob_GRHI100.cal,"Prob Exc100 empirical in classes_calibrated.csv")
 
-# exceedance 300 Bq/m³ ->f(GRHI)
+# exceedance 300 Bq/mÂ³ ->f(GRHI)
 emp.prob_GRHI300.cal <- matrix(ncol=7,nrow=100)                   # empirical exceedance frequency
 mean.prob_GRHI300.cal <- matrix(ncol=7,nrow=100)                  # predicted probability
 in.bin_GRHI300.cal <- matrix(ncol=7,nrow=100)                     # observations in bin
 in.bin.exceed_GRHI300.cal <- matrix(ncol=7,nrow=100)
 metrics_GRHI300.cal <-matrix(ncol=2,nrow=100)
-#exceedance 100 Bq/m³; predictor GRHI
+#exceedance 100 Bq/mÂ³; predictor GRHI
 for (i in 1:100){                                 # i=100 20*5fold cross-validation
   # fit glm model to training data
   glm <- glm(Exc_300~GRHI,data=IRC[sb300[[i]],],            
@@ -147,17 +141,12 @@ for (i in 1:100){                                 # i=100 20*5fold cross-validat
     indices <- which(test.data$predicted >= bin.thresh300[j] & 
                        test.data$predicted < bin.thresh300[j+1])  # find indices of test observations in bin
     in.bin_GRHI300.cal[i,j] <- length(test.data$predicted[indices])                # number of test observations in bin
-    in.bin.exceed_GRHI300.cal[i,j] <- length(which(test.data$actual[indices]==1))  # number of test observations in bin exceeding 100/300 Bq/m³
+    in.bin.exceed_GRHI300.cal[i,j] <- length(which(test.data$actual[indices]==1))  # number of test observations in bin exceeding 100/300 Bq/mÂ³
     mean.prob_GRHI300.cal[i,j] <- mean(test.data$predicted[indices])                    # mean predicted probability in bin
     emp.prob_GRHI300.cal[i,j] <- in.bin.exceed_GRHI300.cal[i,j]/in.bin_GRHI300.cal[i,j]                    # mean predicted probability in bin
   }
 }
-setwd("W:/UR_intern/UR2/SW1-1/Mitarbeiter/Petermann/Paper/Mapping Indoor Rn - geogenic hazard and actual risk/GitHub/Data/glm model evaluation test performance/")
-# write.csv(mean.prob_GRHI300.cal,"Prob Exc300 predicted in classes_calibrated.csv")
-# write.csv(emp.prob_GRHI300.cal,"Prob Exc300 empirical in classes_calibrated.csv")
 
-
-setwd("W:/UR_intern/UR2/SW1-1/Mitarbeiter/Petermann/Paper/Mapping Indoor Rn - geogenic hazard and actual risk/GitHub/Data/glm model evaluation test performance/")
 mean.prob100_predicted <- read.csv("Prob Exc100 predicted in classes.csv")[,2:8]
 emp.prob100_predicted <- read.csv("Prob Exc100 empirical in classes.csv")[,2:8]
 mean.prob300_predicted <- read.csv("Prob Exc300 predicted in classes.csv")[,2:8]
@@ -224,7 +213,7 @@ data300 <- mutate(data300,
 
 
 pred100plot<-ggplot(data100, aes(x = fitted.response100, y = fit_cal)) +
-  ggtitle("Exceedance 100 Bq/m³")+
+  ggtitle("Exceedance 100 Bq/mÂ³")+
   theme(plot.title = element_text(hjust = 0.5))+
   geom_line(lwd=2,colour="gray")+
   geom_point(data=binned_data100,mapping=aes(x=pred,y=obs),size=3, inherit.aes = FALSE)+
@@ -246,7 +235,7 @@ pred100plot<-ggplot(data100, aes(x = fitted.response100, y = fit_cal)) +
 
 
 pred300plot<-ggplot(data300, aes(x = fitted.response300, y = fit_cal)) +
-  ggtitle("Exceedance 300 Bq/m³")+
+  ggtitle("Exceedance 300 Bq/mÂ³")+
   geom_line(lwd=2,colour="gray")+
   geom_point(data=binned_data300,mapping=aes(x=pred,y=obs),size=3)+
   geom_errorbar(data=binned_data300,mapping=aes(x=pred,ymin=obs10, ymax=obs90), width=.05,
@@ -267,7 +256,7 @@ pred300plot<-ggplot(data300, aes(x = fitted.response300, y = fit_cal)) +
 
 
 cal100GAMplot<-ggplot(binned_data100_cal) +
-  ggtitle("Exceedance 100 Bq/m³")+
+  ggtitle("Exceedance 100 Bq/mÂ³")+
   theme(plot.title = element_text(hjust = 0.5))+
   geom_point(data=binned_data100_cal,mapping=aes(x=pred,y=obs),size=3, inherit.aes = FALSE)+
   geom_errorbar(data=binned_data100_cal,mapping=aes(x=pred,ymin=obs10, ymax=obs90), width=.05,
@@ -285,7 +274,7 @@ cal100GAMplot<-ggplot(binned_data100_cal) +
 
 
 cal300GAMplot<-ggplot(binned_data300_cal) +
-  ggtitle("Exceedance 300 Bq/m³")+
+  ggtitle("Exceedance 300 Bq/mÂ³")+
   theme(plot.title = element_text(hjust = 0.5))+
   geom_point(data=binned_data300_cal,mapping=aes(x=pred,y=obs),size=3, inherit.aes = FALSE)+
   geom_errorbar(data=binned_data300_cal,mapping=aes(x=pred,ymin=obs10, ymax=obs90), width=.05,
