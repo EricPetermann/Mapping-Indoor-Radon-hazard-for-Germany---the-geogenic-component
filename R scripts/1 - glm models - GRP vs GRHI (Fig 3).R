@@ -7,10 +7,7 @@ library(Smisc)
 ###  load data  ###  
 #########       #########
 
-setwd("W:/UR_intern/UR2/SW1-1/Mitarbeiter/Petermann/Paper/Mapping Indoor Rn - geogenic hazard and actual risk/GitHub/Data/")
-#setwd("GitHub/")
-
-#load predictor data
+#load predictor data (->Data folder<-)
 GRP<-raster("GRP.tif")
 GRHI<-raster("GRHI.tif")
 #load indoor Rn data
@@ -54,8 +51,8 @@ sb100<-loadObject("spatialBlocks IRC Exc100.R")
 sb300<-loadObject("spatialBlocks IRC Exc300.R")
 
 # define ranges for bins
-bin.thresh300 <- c(0,0.02,0.04,0.06,0.08,0.1,0.15,1) # 300 Bq/m³ exceedance
-bin.thresh100 <- c(0,0.1,0.15,0.2,0.25,0.3,0.45,1)   # 100 Bq/m³ exceedance
+bin.thresh300 <- c(0,0.02,0.04,0.06,0.08,0.1,0.15,1) # 300 Bq/mÂ³ exceedance
+bin.thresh100 <- c(0,0.1,0.15,0.2,0.25,0.3,0.45,1)   # 100 Bq/mÂ³ exceedance
 
 # create matrices for storing performance results
 
@@ -68,13 +65,13 @@ mySummary <- function (data,glm) {
   out
 }
 
-# exceedance 100 Bq/m³ ->f(GRP)
+# exceedance 100 Bq/mÂ³ ->f(GRP)
 emp.prob_GRP100 <- matrix(ncol=7,nrow=100)                   # empirical exceedance frequency
 mean.prob_GRP100 <- matrix(ncol=7,nrow=100)                  # predicted probability
 in.bin_GRP100 <- matrix(ncol=7,nrow=100)                     # observations in bin
 in.bin.exceed_GRP100 <- matrix(ncol=7,nrow=100)
 metrics_GRP100<-matrix(ncol=2,nrow=100)
-#exceedance 100 Bq/m³; predictor GRP
+#exceedance 100 Bq/mÂ³; predictor GRP
 for (i in 1:100){                                 # i=100 20*5fold cross-validation
   # fit glm model to training data
   glm <- glm(Exc_100~GRP,data=IRC[sb100[[i]],],            
@@ -95,19 +92,19 @@ for (i in 1:100){                                 # i=100 20*5fold cross-validat
     indices <- which(test.data$predicted >= bin.thresh100[j] & 
                        test.data$predicted < bin.thresh100[j+1])  # find indices of test observations in bin
     in.bin_GRP100[i,j] <- length(test.data$predicted[indices])                # number of test observations in bin
-    in.bin.exceed_GRP100[i,j] <- length(which(test.data$actual[indices]==1))  # number of test observations in bin exceeding 100/300 Bq/m³
+    in.bin.exceed_GRP100[i,j] <- length(which(test.data$actual[indices]==1))  # number of test observations in bin exceeding 100/300 Bq/mÂ³
     mean.prob_GRP100[i,j] <- mean(test.data$predicted[indices])                    # mean predicted probability in bin
     emp.prob_GRP100[i,j] <- in.bin.exceed_GRP100[i,j]/in.bin_GRP100[i,j]                    # mean predicted probability in bin
   }
 }
 
-# exceedance 300 Bq/m³ ->f(GRP)
+# exceedance 300 Bq/mÂ³ ->f(GRP)
 emp.prob_GRP300 <- matrix(ncol=7,nrow=100)                   # empirical exceedance frequency
 mean.prob_GRP300 <- matrix(ncol=7,nrow=100)                  # predicted probability
 in.bin_GRP300 <- matrix(ncol=7,nrow=100)                     # observations in bin
 in.bin.exceed_GRP300 <- matrix(ncol=7,nrow=100)
 metrics_GRP300<-matrix(ncol=2,nrow=100)
-#exceedance 100 Bq/m³; predictor GRP
+#exceedance 100 Bq/mÂ³; predictor GRP
 for (i in 1:100){                                 # i=100 20*5fold cross-validation
   # fit glm model to training data
   glm <- glm(Exc_300~GRP,data=IRC[sb300[[i]],],            
@@ -128,19 +125,19 @@ for (i in 1:100){                                 # i=100 20*5fold cross-validat
     indices <- which(test.data$predicted >= bin.thresh300[j] & 
                        test.data$predicted < bin.thresh300[j+1])  # find indices of test observations in bin
     in.bin_GRP300[i,j] <- length(test.data$predicted[indices])                # number of test observations in bin
-    in.bin.exceed_GRP300[i,j] <- length(which(test.data$actual[indices]==1))  # number of test observations in bin exceeding 100/300 Bq/m³
+    in.bin.exceed_GRP300[i,j] <- length(which(test.data$actual[indices]==1))  # number of test observations in bin exceeding 100/300 Bq/mÂ³
     mean.prob_GRP300[i,j] <- mean(test.data$predicted[indices])                    # mean predicted probability in bin
     emp.prob_GRP300[i,j] <- in.bin.exceed_GRP300[i,j]/in.bin_GRP300[i,j]                    # mean predicted probability in bin
   }
 }
 
-# exceedance 100 Bq/m³ ->f(GRHI)
+# exceedance 100 Bq/mÂ³ ->f(GRHI)
 emp.prob_GRHI100 <- matrix(ncol=7,nrow=100)                   # empirical exceedance frequency
 mean.prob_GRHI100 <- matrix(ncol=7,nrow=100)                  # predicted probability
 in.bin_GRHI100 <- matrix(ncol=7,nrow=100)                     # observations in bin
 in.bin.exceed_GRHI100 <- matrix(ncol=7,nrow=100)
 metrics_GRHI100<-matrix(ncol=2,nrow=100)
-#exceedance 100 Bq/m³; predictor GRHI
+#exceedance 100 Bq/mÂ³; predictor GRHI
 for (i in 1:100){                                 # i=100 20*5fold cross-validation
   # fit glm model to training data
   glm <- glm(Exc_100~GRHI,data=IRC[sb100[[i]],],            
@@ -161,7 +158,7 @@ for (i in 1:100){                                 # i=100 20*5fold cross-validat
     indices <- which(test.data$predicted >= bin.thresh100[j] & 
                        test.data$predicted < bin.thresh100[j+1])  # find indices of test observations in bin
     in.bin_GRHI100[i,j] <- length(test.data$predicted[indices])                # number of test observations in bin
-    in.bin.exceed_GRHI100[i,j] <- length(which(test.data$actual[indices]==1))  # number of test observations in bin exceeding 100/100 Bq/m³
+    in.bin.exceed_GRHI100[i,j] <- length(which(test.data$actual[indices]==1))  # number of test observations in bin exceeding 100/100 Bq/mÂ³
     mean.prob_GRHI100[i,j] <- mean(test.data$predicted[indices])                    # mean predicted probability in bin
     emp.prob_GRHI100[i,j] <- in.bin.exceed_GRHI100[i,j]/in.bin_GRHI100[i,j]                    # mean predicted probability in bin
   }
@@ -170,13 +167,13 @@ setwd("W:/UR_intern/UR2/SW1-1/Mitarbeiter/Petermann/Paper/Mapping Indoor Rn - ge
 # write.csv(mean.prob_GRHI100,"Prob Exc100 predicted in classes.csv")
 # write.csv(emp.prob_GRHI100,"Prob Exc100 empirical in classes.csv")
 
-# exceedance 300 Bq/m³ ->f(GRHI)
+# exceedance 300 Bq/mÂ³ ->f(GRHI)
 emp.prob_GRHI300 <- matrix(ncol=7,nrow=100)                   # empirical exceedance frequency
 mean.prob_GRHI300 <- matrix(ncol=7,nrow=100)                  # predicted probability
 in.bin_GRHI300 <- matrix(ncol=7,nrow=100)                     # observations in bin
 in.bin.exceed_GRHI300 <- matrix(ncol=7,nrow=100)
 metrics_GRHI300<-matrix(ncol=2,nrow=100)
-#exceedance 100 Bq/m³; predictor GRHI
+#exceedance 100 Bq/mÂ³; predictor GRHI
 for (i in 1:100){                                 # i=100 20*5fold cross-validation
   # fit glm model to training data
   glm <- glm(Exc_300~GRHI,data=IRC[sb300[[i]],],            
@@ -197,7 +194,7 @@ for (i in 1:100){                                 # i=100 20*5fold cross-validat
     indices <- which(test.data$predicted >= bin.thresh300[j] & 
                        test.data$predicted < bin.thresh300[j+1])  # find indices of test observations in bin
     in.bin_GRHI300[i,j] <- length(test.data$predicted[indices])                # number of test observations in bin
-    in.bin.exceed_GRHI300[i,j] <- length(which(test.data$actual[indices]==1))  # number of test observations in bin exceeding 100/300 Bq/m³
+    in.bin.exceed_GRHI300[i,j] <- length(which(test.data$actual[indices]==1))  # number of test observations in bin exceeding 100/300 Bq/mÂ³
     mean.prob_GRHI300[i,j] <- mean(test.data$predicted[indices])                    # mean predicted probability in bin
     emp.prob_GRHI300[i,j] <- in.bin.exceed_GRHI300[i,j]/in.bin_GRHI300[i,j]                    # mean predicted probability in bin
   }
@@ -224,22 +221,22 @@ AIC300<-data.frame(AIC=c(metrics_GRP300[,2],metrics_GRHI300[,2]),ind=c(rep("GRP"
 
 logLoss100.plot <- ggplot(logLoss100, aes(x=ind, y=logLoss,fill=ind)) + 
   geom_boxplot()+
-  labs(title="100 Bq/m³ exceedance",x="", y = "logLoss")+
+  labs(title="100 Bq/mÂ³ exceedance",x="", y = "logLoss")+
   theme(legend.position="none")
 
 logLoss300.plot <- ggplot(logLoss300, aes(x=ind, y=logLoss,fill=ind)) + 
   geom_boxplot()+  
-  labs(title="300 Bq/m³ exceedance",x="", y = "logLoss")+
+  labs(title="300 Bq/mÂ³ exceedance",x="", y = "logLoss")+
   theme(legend.position="none")
 
 AIC100.plot <- ggplot(AIC100, aes(x=ind, y=AIC,fill=ind)) + 
   geom_boxplot()+
-  labs(title="100 Bq/m³ exceedance",x="", y = "AIC")+
+  labs(title="100 Bq/mÂ³ exceedance",x="", y = "AIC")+
   theme(legend.position="none")
 
 AIC300.plot <- ggplot(AIC300, aes(x=ind, y=AIC,fill=ind)) + 
   geom_boxplot()+
-  labs(title="300 Bq/m³ exceedance",x="", y = "AIC")+
+  labs(title="300 Bq/mÂ³ exceedance",x="", y = "AIC")+
   theme(legend.position="none")
 
 grid.arrange(logLoss100.plot,logLoss300.plot,AIC100.plot,AIC300.plot,nrow=2,ncol=2)
