@@ -167,7 +167,3 @@ P300_GLM_RPA5=  tm_shape(BL)+
   tm_credits("(c) GeoBasis-DE / BKG 2020", position=c("LEFT", "BOTTOM"))
 
 tmap_arrange(P300_GLM_RPA10,P300_GLM_RPA5, ncol=2,nrow=1)
-
-rawdata300<-as.data.frame(c(0.002))
-colnames(rawdata300)="fitted.response300"
-Prob300.cal<-predict(cal.mod.GRHI_300,newdata=rawdata300,type="response")
