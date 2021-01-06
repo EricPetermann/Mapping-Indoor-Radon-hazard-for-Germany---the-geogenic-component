@@ -163,9 +163,6 @@ for (i in 1:100){                                 # i=100 20*5fold cross-validat
     emp.prob_GRHI100[i,j] <- in.bin.exceed_GRHI100[i,j]/in.bin_GRHI100[i,j]                    # mean predicted probability in bin
   }
 }
-setwd("W:/UR_intern/UR2/SW1-1/Mitarbeiter/Petermann/Paper/Mapping Indoor Rn - geogenic hazard and actual risk/GitHub/Data/glm model evaluation test performance/")
-# write.csv(mean.prob_GRHI100,"Prob Exc100 predicted in classes.csv")
-# write.csv(emp.prob_GRHI100,"Prob Exc100 empirical in classes.csv")
 
 # exceedance 300 Bq/m³ ->f(GRHI)
 emp.prob_GRHI300 <- matrix(ncol=7,nrow=100)                   # empirical exceedance frequency
@@ -199,9 +196,6 @@ for (i in 1:100){                                 # i=100 20*5fold cross-validat
     emp.prob_GRHI300[i,j] <- in.bin.exceed_GRHI300[i,j]/in.bin_GRHI300[i,j]                    # mean predicted probability in bin
   }
 }
-setwd("W:/UR_intern/UR2/SW1-1/Mitarbeiter/Petermann/Paper/Mapping Indoor Rn - geogenic hazard and actual risk/GitHub/Data/glm model evaluation test performance/")
-# write.csv(mean.prob_GRHI300,"Prob Exc300 predicted in classes.csv")
-# write.csv(emp.prob_GRHI300,"Prob Exc300 empirical in classes.csv")
 
 #produce boxplots
 
@@ -240,6 +234,3 @@ AIC300.plot <- ggplot(AIC300, aes(x=ind, y=AIC,fill=ind)) +
   theme(legend.position="none")
 
 grid.arrange(logLoss100.plot,logLoss300.plot,AIC100.plot,AIC300.plot,nrow=2,ncol=2)
-
-
-
