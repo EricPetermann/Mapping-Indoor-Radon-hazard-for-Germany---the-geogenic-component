@@ -15,9 +15,6 @@ library(dplyr)
 ###  load data  ###  
 #########       #########
 
-setwd("W:/UR_intern/UR2/SW1-1/Mitarbeiter/Petermann/Paper/Mapping Indoor Rn - geogenic hazard and actual risk/GitHub/Data/")
-#setwd("GitHub/")
-
 #load predictor data
 GRHI<-raster("GRHI.tif")
 #load indoor Rn data
@@ -63,7 +60,7 @@ data300 <- mutate(data300,
 #########       #########
 
 GLM100_CI <- ggplot(data100, aes(x = GRHI, y = fit_resp)) +
-  ggtitle("Exceedance 100 Bq/m³")+
+  ggtitle("Exceedance 100 Bq/mÂ³")+
   geom_line(lwd=2) +
   geom_rug(aes(y = glm100.GRHI$y, colour = glm100.GRHI$model$Exc_100 )) +
   scale_colour_discrete(name = 'Exceedance') +
@@ -77,12 +74,13 @@ GLM100_CI <- ggplot(data100, aes(x = GRHI, y = fit_resp)) +
     axis.text.x = element_text(size = 14),
     axis.title.y = element_text(size = 16),
     axis.text.y = element_text(size = 14))+
-  labs(x = 'Geogenic Radon Hazard Index', y = 'Probability (IRC>100 Bq/m³)')+
+  labs(x = 'Geogenic Radon Hazard Index', y = 'Probability (IRC>100 Bq/mÂ³)')+
   geom_ribbon(data = data100,
                 aes(ymin = right_lwr, ymax = right_upr),
                 alpha = 0.1)
+
 GLM300_CI  <- ggplot(data300, aes(x = GRHI, y = fit_resp)) +
-  ggtitle("Exceedance 300 Bq/m³")+
+  ggtitle("Exceedance 300 Bq/mÂ³")+
   geom_line(lwd=2) +
   geom_rug(aes(y = glm300.GRHI$y, colour = glm300.GRHI$model$Exc_300 )) +
   scale_colour_discrete(name = 'Exceedance') +
@@ -96,7 +94,7 @@ GLM300_CI  <- ggplot(data300, aes(x = GRHI, y = fit_resp)) +
     axis.text.x = element_text(size = 14),
     axis.title.y = element_text(size = 16),
     axis.text.y = element_text(size = 14))+
-  labs(x = 'Geogenic Radon Hazard Index', y = 'Probability (IRC>300 Bq/m³)')+ 
+  labs(x = 'Geogenic Radon Hazard Index', y = 'Probability (IRC>300 Bq/mÂ³)')+ 
   geom_ribbon(data = data300,aes(ymin = right_lwr, ymax = right_upr),
               alpha = 0.1)
 
