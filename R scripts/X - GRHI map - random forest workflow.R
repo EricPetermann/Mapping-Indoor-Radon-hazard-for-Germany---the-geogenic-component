@@ -3,6 +3,7 @@ library(caret)
 library(CAST)
 library(party)
 library(plyr)
+library(GSIF)
 
 #load GRP data
 Data <- loadObject("GRP data.R")
@@ -46,7 +47,7 @@ fitControl <- trainControl(
 #define tuningGrid
 rfGrid <-  expand.grid(mtry = 5)  # hold constant at mtry=5 for predictor selection
 
-#variables to exclude
+#variables to include
 include<-which(!names(Data) %in% c("GRP"))
 
 # start forward feature selection
@@ -58,7 +59,7 @@ FFS_GRP <-ffs(
   method = "cforest",
   tuneGrid = rfGrid,
   trControl = fitControl,
-  controls = cforest_unbiased(ntree = 200, trace = TRUE)
+  controls = cforest_unbiased(ntree = 100, trace = TRUE)
 ) 
 
 
@@ -138,7 +139,7 @@ Mod_GRP <- party::cforest(log(GRP)~.,data=Data[,include],
 ###       Mapping            ###  
 #########              #########
 
-#LOAD OBSERVATION DATA
+# define geological data as factor
 Grid$GK250=as.factor(Grid$GK250)
 
 # find variable names for estimation grid
@@ -146,7 +147,6 @@ Grid.r<-raster::brick("Prediction Raster.tif")
 Grid.r@data@names=names(Grid[3:40])
 
 # prepare estimation grid
-#vars_Rn<-FFS_Rn$selectedvars
 include<-which(names(Grid.r)%in%vars_selected)   # find column numbers with specific column names
 Grid.GRP <- Grid.r[[include]]
 plot(Grid.GRP)
@@ -157,7 +157,7 @@ Grid.df$GK250<-as.factor(Grid.df$GK250)
 x=seq(280500,921500,1000)
 y=seq(5235500,6106500,1000)
 xy=expand.grid(x,y)
-#G-K 4.Streifen
+# define crs
 UTM32=CRS("+init=epsg:25832")
 
 #tiling
@@ -173,7 +173,6 @@ lines(tiles.pol, lwd=2)
 
 #create folder for tiles; navigate
 setwd("./tiles")
-
 
 ### function for mapping tiled data (including caterorical predictors)
 dir="."
@@ -206,6 +205,7 @@ fun_RF <- function(i, tiles, dir="."){
 # apply a function over  a raster (multicore usage possible)
 x0 <- mclapply(1:length(tiles.pol), FUN=fun_RF, tiles=tiles)
 
+### assembly tiles to a map
 # find all tiles
 f <-list.files(pattern = glob2rx("Tile_*.tif"))  # "*" is the wildcard
 
