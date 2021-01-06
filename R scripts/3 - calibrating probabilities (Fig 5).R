@@ -147,6 +147,7 @@ for (i in 1:100){                                 # i=100 20*5fold cross-validat
   }
 }
 
+# load data (data folder) results from script 1+3
 mean.prob100_predicted <- read.csv("Prob Exc100 predicted in classes.csv")[,2:8]
 emp.prob100_predicted <- read.csv("Prob Exc100 empirical in classes.csv")[,2:8]
 mean.prob300_predicted <- read.csv("Prob Exc300 predicted in classes.csv")[,2:8]
