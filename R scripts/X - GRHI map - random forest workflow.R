@@ -4,8 +4,6 @@ library(CAST)
 library(party)
 library(plyr)
 
-setwd("W:/UR_intern/UR2/SW1-1/Mitarbeiter/Petermann/Paper/Mapping Indoor Rn - geogenic hazard and actual risk/GitHub/Data/")
-
 #load GRP data
 Data <- loadObject("GRP data.R")
 
@@ -215,4 +213,3 @@ f <-list.files(pattern = glob2rx("Tile_*.tif"))  # "*" is the wildcard
 r <- lapply(f, FUN=raster) 
 # as you have the arguments as a list call 'merge' with 'do.call'  
 x <- do.call("merge",r) 
-
